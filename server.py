@@ -1,15 +1,18 @@
 # Python 3 server example
 from http.server import BaseHTTPRequestHandler, HTTPServer # importo la libreria che mi fa funzionare il server
 import time # importo la libreria che mi permette di utilizzare il tempo
+import re
 hostName = "localhost" # definisco il nome del mio host 
 serverPort = 8080 # definisco la porta
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == "/Lapo":
+        x = re.search("Lapo", self.path)
+        if x:
             personalized_path = "Tapinassi"
         else:
             personalized_path = self.path
+
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
