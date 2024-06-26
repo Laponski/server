@@ -7,7 +7,7 @@ serverPort = 8080 # definisco la porta
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == "Lapo":
+        if self.path == "/Lapo":
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
