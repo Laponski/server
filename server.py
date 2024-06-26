@@ -14,12 +14,13 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(bytes("<p>Request: %s</p>" % self.path, "utf-8"))
         self.wfile.write(bytes("<body>", "utf-8"))
         self.wfile.write(bytes("<p>This is an example web server daje.</p>", "utf-8"))
+        print(self.path)
         self.wfile.write(bytes("</body></html>", "utf-8"))
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
-
+    
     try:
         webServer.serve_forever()
     except KeyboardInterrupt:
