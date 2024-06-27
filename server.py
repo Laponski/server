@@ -4,6 +4,10 @@ app = Flask(__name__)  # Crea un'istanza dell'app Flask
 
 data = {}  # Un dizionario che fungerà da database in memoria per memorizzare i dati
 
+@app.route('/')  # Definisce una route di test per la root dell'applicazione
+def home():
+    return "Server is running!"  # Restituisce un semplice messaggio per confermare che il server è in esecuzione
+
 @app.route('/item/<key>', methods=['GET'])  # Definisce una route per gestire le richieste GET per un item specifico
 def get_item(key):
     if key in data:  # Controlla se la chiave esiste nel dizionario
