@@ -1,35 +1,48 @@
-# Python 3 server example
-from http.server import BaseHTTPRequestHandler, HTTPServer # importo la libreria che mi fa funzionare il server
-import time # importo la libreria che mi permette di utilizzare il tempo
-import re
-hostName = "localhost" # definisco il nome del mio host 
-serverPort = 8080 # definisco la porta
+from flask import Flask, request, jsonify  # Importa Flask e le funzioni necessarie per gestire le richieste e rispondere con JSON
 
-class MyServer(BaseHTTPRequestHandler):
-    def do_GET(self):
-        x = re.search("Lapo", self.path)
-        if x:
-            personalized_path = "Tapinassi"
-        else:
-            personalized_path = self.path
+app = Flask(__name__)  # Crea un'istanza dell'app Flask
 
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        self.wfile.write(bytes("<html><head><title>https://pythonbasics.org</title></head>", "utf-8"))
-        self.wfile.write(bytes("<p>Request: %s</p>" % personalized_path, "utf-8"))
-        self.wfile.write(bytes("<body>", "utf-8"))
-        self.wfile.write(bytes("<p>This is an example web server daje.</p>", "utf-8"))
-        self.wfile.write(bytes("</body></html>", "utf-8"))
+data = {}  # Un dizionario che fungerà da database in memoria per memorizzare i dati
 
-if __name__ == "__main__":        
-    webServer = HTTPServer((hostName, serverPort), MyServer)
-    print("Server started http://%s:%s" % (hostName, serverPort))
+@app.route('/item/<key>', methods=['GET'])  # Definisce una route per gestire le richieste GET per un item specifico
+def get_item(key):
+    if key in data:  # Controlla se la chiave esiste nel dizionario
+        return jsonify({key: data[key]})  # Restituisce il valore associato alla chiave in formato JSON
+    else:
+        return "Item not found", 404  # Restituisce un errore 404 se la chiave non esiste
 
-    try:
-        webServer.serve_forever()
-    except KeyboardInterrupt:
-        pass
+@app.route('/item', methods=['POST'])  # Definisce una route per gestire le richieste POST per creare un nuovo item
+def post_item():
+    item = request.json  # Ottiene i dati JSON dalla richiesta
+    key = item.get('key')  # Estrae la chiave dall'oggetto JSON
+    value = item.get('value')  # Estrae il valore dall'oggetto JSON
+    if key in data:  # Controlla se la chiave esiste già nel dizionario
+        return "Item already exists", 400  # Restituisce un errore 400 se la chiave esiste già
+    data[key] = value  # Aggiunge il nuovo item al dizionario
+    return jsonify({key: value}), 201  # Restituisce il nuovo item creato in formato JSON con un codice di stato 201
 
-    webServer.server_close()
-    print("Server stopped.")
+@app.route('/item/<key>', methods=['PUT'])  # Definisce una route per gestire le richieste PUT per creare o aggiornare un item specifico
+def put_item(key):
+    value = request.json.get('value')  # Ottiene il valore dalla richiesta JSON
+    data[key] = value  # Aggiorna o crea una nuova voce nel dizionario con la chiave specificata
+    return jsonify({key: value}), 201  # Restituisce l'item creato o aggiornato in formato JSON con un codice di stato 201
+
+@app.route('/item/<key>', methods=['PATCH'])  # Definisce una route per gestire le richieste PATCH per aggiornare parzialmente un item specifico
+def patch_item(key):
+    if key in data:  # Controlla se la chiave esiste nel dizionario
+        value = request.json.get('value')  # Ottiene il valore dalla richiesta JSON
+        data[key] = value  # Aggiorna il valore della chiave esistente nel dizionario
+        return jsonify({key: value})  # Restituisce l'item aggiornato in formato JSON
+    else:
+        return "Item not found", 404  # Restituisce un errore 404 se la chiave non esiste
+
+@app.route('/item/<key>', methods=['DELETE'])  # Definisce una route per gestire le richieste DELETE per eliminare un item specifico
+def delete_item(key):
+    if key in data:  # Controlla se la chiave esiste nel dizionario
+        del data[key]  # Elimina la voce associata alla chiave dal dizionario
+        return '', 204  # Restituisce un codice di stato 204 senza contenuto
+    else:
+        return "Item not found", 404  # Restituisce un errore 404 se la chiave non esiste
+
+if __name__ == '__main__':  # Verifica se il file viene eseguito direttamente e non importato come modulo
+    app.run(debug=True)  # Avvia il server in modalità debug
