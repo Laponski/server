@@ -4,6 +4,10 @@ app = Flask(__name__)  # Crea un'istanza dell'app Flask
 
 data = {}  # Un dizionario che fungerà da database in memoria per memorizzare i dati
 
+data['key1'] = 'value1'
+data['key2'] = 'value2'
+data['key3'] = 'value3'
+
 @app.route('/')  # Definisce una route di test per la root dell'applicazione
 def home():
     return "Server is running!"  # Restituisce un semplice messaggio per confermare che il server è in esecuzione
