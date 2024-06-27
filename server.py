@@ -32,7 +32,7 @@ def post_item():
         data[key] = value  # Aggiunge il nuovo item al dizionario
         return jsonify({key: value}), 201  # Restituisce il nuovo item creato in formato JSON con un codice di stato 201
     else: # se la regex non matcha allora restituisci sotto
-        return "There can be maximum 5 keys, try again :(", 406 # messaggio per informare l'utente e codice di uscita
+        return "There can be maximum 5 keys, try again :(", 202 # messaggio per informare l'utente e codice di uscita
 
 @app.route('/item/<key>', methods=['PUT'])  # Definisce una route per gestire le richieste PUT per creare o aggiornare un item specifico
 def put_item(key):
