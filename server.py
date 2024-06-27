@@ -2,11 +2,11 @@ from flask import Flask, request, jsonify  # Importa Flask e le funzioni necessa
 
 app = Flask(__name__)  # Crea un'istanza dell'app Flask
 
-data = {}  # Un dizionario che fungerà da database in memoria per memorizzare i dati
-
-data['key1'] = 'value1'
-data['key2'] = 'value2'
-data['key3'] = 'value3'
+data = {                # Un dizionario che fungerà da database in memoria per memorizzare i dati
+    'key1': 'value1',
+    'key2': 'value2',
+    'key3': 'value3'
+}  
 
 @app.route('/')  # Definisce una route di test per la root dell'applicazione
 def home():
