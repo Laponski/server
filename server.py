@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify  # Importa Flask e le funzioni necessarie per gestire le richieste e rispondere con JSON
+import re
 
 app = Flask(__name__)  # Crea un'istanza dell'app Flask
 
@@ -16,8 +17,6 @@ def home():
 def get_item(key):
     if key in data:  # Controlla se la chiave esiste nel dizionario
         return jsonify({key: data[key]})  # Restituisce il valore associato alla chiave in formato JSON
-    elif None: 
-        return "Item not accepted", 404
     else:
         return "Item not found", 404  # Restituisce un errore 404 se la chiave non esiste
 
@@ -26,10 +25,14 @@ def post_item():
     item = request.json  # Ottiene i dati JSON dalla richiesta
     key = item.get('key')  # Estrae la chiave dall'oggetto JSON
     value = item.get('value')  # Estrae il valore dall'oggetto JSON
+    x = re.search("key[1-5]", key) #la mia regex
     if key in data:  # Controlla se la chiave esiste già nel dizionario
         return "Item already exists", 400  # Restituisce un errore 400 se la chiave esiste già
-    data[key] = value  # Aggiunge il nuovo item al dizionario
-    return jsonify({key: value}), 201  # Restituisce il nuovo item creato in formato JSON con un codice di stato 201
+    elif x: # se la regex matcha un valore allora esegue sotto
+        data[key] = value  # Aggiunge il nuovo item al dizionario
+        return jsonify({key: value}), 201  # Restituisce il nuovo item creato in formato JSON con un codice di stato 201
+    else: # se la regex non matcha allora restituisci sotto
+        return "There can be maximum 5 keys, try again :(", 406 # messaggio per informare l'utente e codice di uscita
 
 @app.route('/item/<key>', methods=['PUT'])  # Definisce una route per gestire le richieste PUT per creare o aggiornare un item specifico
 def put_item(key):
