@@ -16,6 +16,8 @@ def home():
 def get_item(key):
     if key in data:  # Controlla se la chiave esiste nel dizionario
         return jsonify({key: data[key]})  # Restituisce il valore associato alla chiave in formato JSON
+    elif None: 
+        return "Item not accepted", 404
     else:
         return "Item not found", 404  # Restituisce un errore 404 se la chiave non esiste
 
