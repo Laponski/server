@@ -16,7 +16,7 @@ def home():
 @app.route('/item/<key>', methods=['GET'])  # Definisce una route per gestire le richieste GET per un item specifico
 def get_item(key):
     if key in data:  # Controlla se la chiave esiste nel dizionario
-        return jsonify({key: data[key]})  # Restituisce il valore associato alla chiave in formato JSON
+        return jsonify(data[key])  # Restituisce il valore associato alla chiave in formato JSON
     else:
         return "404, Not Found", 404  # Restituisce un errore 404 se la chiave non esiste
 
