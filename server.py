@@ -65,10 +65,17 @@ def put_item(key):
 
 @app.route('/item/<key>', methods=['PATCH'])  # Definisce una route per gestire le richieste PATCH per aggiornare parzialmente un item specifico
 def patch_item(key):
+    x = re.search("key[1-5]", key) #la mia regex
     if key in data:  # Controlla se la chiave esiste nel dizionario
         value = request.json.get('value')  # Ottiene il valore dalla richiesta JSON
-        data[key] = value  # Aggiorna il valore della chiave esistente nel dizionario
-        return jsonify({key: value})  # Restituisce l'item aggiornato in formato JSON
+        y = re.search("[0-9]", value)
+        if y:
+            data[key] = value  # Aggiorna il valore della chiave esistente nel dizionario
+            return jsonify({key: value})  # Restituisce l'item aggiornato in formato JSON
+        else:
+            return "Your value must contain at least one number.", 202
+    elif not x:
+            return "404, Not Found. Remember that there are maximum 5 keys", 404
     else:
         return "404, Not Found", 404  # Restituisce un errore 404 se la chiave non esiste
 
