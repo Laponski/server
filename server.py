@@ -23,7 +23,8 @@ def get_item(key):
 @app.route('/list', methods=['GET'])  # Definisce una route per gestire le richieste GET per un item specifico
 def get_list():
     if data:  # Controlla se la chiave esiste nel dizionario
-        return jsonify(data)  # Restituisce il valore associato alla chiave in formato JSON
+        array = list(data.keys())
+        return jsonify({"Items count": len(array),"All items": array })  # Restituisce il valore associato alla chiave in formato JSON    
     else:
         return "404, Not Found", 404  # Restituisce un errore 404 se la chiave non esiste
 
