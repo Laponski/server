@@ -20,6 +20,13 @@ def get_item(key):
     else:
         return "404, Not Found", 404  # Restituisce un errore 404 se la chiave non esiste
 
+@app.route('/list', methods=['GET'])  # Definisce una route per gestire le richieste GET per un item specifico
+def get_list():
+    if data:  # Controlla se la chiave esiste nel dizionario
+        return jsonify(data)  # Restituisce il valore associato alla chiave in formato JSON
+    else:
+        return "404, Not Found", 404  # Restituisce un errore 404 se la chiave non esiste
+
 @app.route('/item', methods=['POST'])  # Definisce una route per gestire le richieste POST per creare un nuovo item
 def post_item():
     item = request.json  # Ottiene i dati JSON dalla richiesta
