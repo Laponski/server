@@ -48,9 +48,20 @@ def post_item():
 
 @app.route('/item/<key>', methods=['PUT'])  # Definisce una route per gestire le richieste PUT per creare o aggiornare un item specifico
 def put_item(key):
+    x = re.search("key[1-5]", key) #la mia regex
     value = request.json.get('value')  # Ottiene il valore dalla richiesta JSON
-    data[key] = value  # Aggiorna o crea una nuova voce nel dizionario con la chiave specificata
-    return jsonify({key: value}), 201  # Restituisce l'item creato o aggiornato in formato JSON con un codice di stato 201
+    y = re.search("[0-9]", value)
+    if x and y:
+        data[key] = value  # Aggiorna o crea una nuova voce nel dizionario con la chiave specificata
+        return jsonify({key: value}), 201  # Restituisce l'item creato o aggiornato in formato JSON con un codice di stato 201
+    elif  not x and not y:
+        return "Your value must contain at least one number and there can be maximum 5 keys.", 202
+    elif not y:
+        return "Your value must contain at least one number.", 202
+    elif not x:
+        return "There can be maximum 5 keys, try again.", 202
+
+    
 
 @app.route('/item/<key>', methods=['PATCH'])  # Definisce una route per gestire le richieste PATCH per aggiornare parzialmente un item specifico
 def patch_item(key):
