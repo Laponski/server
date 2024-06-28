@@ -32,12 +32,12 @@ def post_item():
     elif x and y: # se la regex matcha un valore allora esegue sotto
         data[key] = value  # Aggiunge il nuovo item al dizionario
         return jsonify({key: value}), 201  # Restituisce il nuovo item creato in formato JSON con un codice di stato 201
-    elif not x : # se la regex non matcha allora restituisci sotto
-        return "There can be maximum 5 keys, try again.", 202 # messaggio per informare l'utente e codice di uscita
+    elif not x and not y: # se la regex non matcha allora restituisci sotto
+        return "Your value must contain at least one number and there can be maximum 5 keys", 202 # messaggio per informare l'utente e codice di uscita
     elif not y:
         return "Your value must contain at least one number.", 202
-    else:
-        return "Your value must contain at least one number and there can be maximum 5 keys", 202
+    elif not x:
+        return "There can be maximum 5 keys, try again.", 202
 
 @app.route('/item/<key>', methods=['PUT'])  # Definisce una route per gestire le richieste PUT per creare o aggiornare un item specifico
 def put_item(key):
