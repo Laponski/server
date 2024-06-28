@@ -28,7 +28,7 @@ def post_item():
     value = item.get('value')  # Estrae il valore dall'oggetto JSON
     y = re.search("[0-9]", value)
     if key in data:  # Controlla se la chiave esiste già nel dizionario
-        return "Item already exists", 400  # Restituisce un errore 400 se la chiave esiste già
+        return "Item already exists, try deleting some keys before adding new ones", 400  # Restituisce un errore 400 se la chiave esiste già
     elif x and y: # se la regex matcha un valore allora esegue sotto
         data[key] = value  # Aggiunge il nuovo item al dizionario
         return jsonify({key: value}), 201  # Restituisce il nuovo item creato in formato JSON con un codice di stato 201
