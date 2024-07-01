@@ -35,32 +35,34 @@ def post_item():
     key = item.get('key')  # Extracts the key from the JSON object
     value = item.get('value')  # Extracts the value from the JSON object
     y = re.search("[0-9]", value)  # Searches if there is at least one number in the value
+    error_message = ""
     if key in data:  # Check if the key already exists in the dictionary
         return "Item already exists, try deleting some keys before adding new ones", 400  # Returns a message, along with the error code to inform the user
     elif x <= 4 and y:  # If there are less than 5 keys and there is a number in the value
         data[key] = value  # Adds the new item to the dictionary
         return jsonify({key: value}), 201  # Returns the newly created item in JSON format with a status code of 201
-    elif x >= 5 and not y:  # If more than 5 keys are taken and there is no number in the value
-        return "Your value must contain at least one number and there can be maximum 5 keys", 202  # Message to inform the user and exit code
-    elif not y:  # If there is no number in the value
-        return "Your value must contain at least one number.", 202  # Message to inform the user and exit code
-    elif x >= 5:  # If there are more than 5 keys
-        return "There can be maximum 5 keys, try again.", 202  # Message to inform the user and exit code
+    else:
+        if x >= 5:  # If more than 5 keys are taken and there is no number in the value
+            error_message += "There cannot be more than 5 keys. "   
+        if not y:  # If there is no number in the value
+            error_message += "Your value must contain at least one number" 
+        return error_message, 202  # Message to inform the user and exit code
 
 @app.route('/item/<key>', methods=['PUT'])  # Defines a route to handle PUT requests to create or update a specific item
 def put_item(key):
     x = len(data)  # Stores the number of keys
     value = request.json.get('value')  # Extracts the value from the JSON object
     y = re.search("[0-9]", value)  # Searches if there is at least one number in the value
-    if x <= 4 and y:  # If there are less than 5 keys and there is a number in the value
+    error_message = ""
+    if (x <= 4 or key in data) and y:  # If there are less than 5 keys and there is a number in the value
         data[key] = value  # Update or create a new dictionary entry with the specified key
         return jsonify({key: value}), 201  # Returns the newly created item in JSON format with a status code of 201
-    elif  x >= 5 and not y:  # If more than 5 keys are taken and there is no number in the value
-        return "Your value must contain at least one number and there can be maximum 5 keys.", 202  # Message to inform the user and exit code
-    elif not y:  # If there is no number in the value
-        return "Your value must contain at least one number.", 202  # Message to inform the user and exit code
-    elif x >= 5:  # If there are more than 5 keys
-        return "There can be maximum 5 keys, try again.", 202  # Message to inform the user and exit code
+    else:
+        if  x >= 5 and key not in data:  # If more than 5 keys are taken and there is no number in the value
+            error_message += "There cannot be more than 5 keys. "   
+        if not y:  # If there is no number in the value
+            error_message += "Your value must contain at least one number"
+        return error_message, 202  # Message to inform the user and exit code
 
 @app.route('/item/<key>', methods=['PATCH'])  # Defines a route to handle PATCH requests to partially update a specific item
 def patch_item(key):
