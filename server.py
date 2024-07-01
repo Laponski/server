@@ -33,41 +33,38 @@ def post_item():
     x = len(data)  # Stores the number of keys 
     item = request.json  # Gets JSON data from the request
     key = item.get('key')  # Extracts the key from the JSON object
-    x += 1  # Adds one key to its length
     value = item.get('value')  # Extracts the value from the JSON object
     y = re.search("[0-9]", value)  # Searches if there is at least one number in the value
     if key in data:  # Check if the key already exists in the dictionary
         return "Item already exists, try deleting some keys before adding new ones", 400  # Returns a message, along with the error code to inform the user
-    elif x < 6 and y:  # If there are less than 5 keys and there is a number in the value
+    elif x <= 4 and y:  # If there are less than 5 keys and there is a number in the value
         data[key] = value  # Adds the new item to the dictionary
         return jsonify({key: value}), 201  # Returns the newly created item in JSON format with a status code of 201
-    elif x > 5 and not y:  # If more than 5 keys are taken and there is no number in the value
+    elif x >= 5 and not y:  # If more than 5 keys are taken and there is no number in the value
         return "Your value must contain at least one number and there can be maximum 5 keys", 202  # Message to inform the user and exit code
     elif not y:  # If there is no number in the value
         return "Your value must contain at least one number.", 202  # Message to inform the user and exit code
-    elif x > 5:  # If there are more than 5 keys
+    elif x >= 5:  # If there are more than 5 keys
         return "There can be maximum 5 keys, try again.", 202  # Message to inform the user and exit code
 
 @app.route('/item/<key>', methods=['PUT'])  # Defines a route to handle PUT requests to create or update a specific item
 def put_item(key):
-    x = len(data)  # Stores the number of keys 
-    x += 1  # Adds one key to its length
+    x = len(data)  # Stores the number of keys
     value = request.json.get('value')  # Extracts the value from the JSON object
     y = re.search("[0-9]", value)  # Searches if there is at least one number in the value
-    if x < 6 and y:  # If there are less than 5 keys and there is a number in the value
+    if x <= 4 and y:  # If there are less than 5 keys and there is a number in the value
         data[key] = value  # Update or create a new dictionary entry with the specified key
         return jsonify({key: value}), 201  # Returns the newly created item in JSON format with a status code of 201
-    elif  x > 5 and not y:  # If more than 5 keys are taken and there is no number in the value
+    elif  x >= 5 and not y:  # If more than 5 keys are taken and there is no number in the value
         return "Your value must contain at least one number and there can be maximum 5 keys.", 202  # Message to inform the user and exit code
     elif not y:  # If there is no number in the value
         return "Your value must contain at least one number.", 202  # Message to inform the user and exit code
-    elif x > 5:  # If there are more than 5 keys
+    elif x >= 5:  # If there are more than 5 keys
         return "There can be maximum 5 keys, try again.", 202  # Message to inform the user and exit code
 
 @app.route('/item/<key>', methods=['PATCH'])  # Defines a route to handle PATCH requests to partially update a specific item
 def patch_item(key):
-    x = len(data)  # Stores the number of keys 
-    x += 1  # Adds one key to its length
+    x = len(data)  # Stores the number of keys
     if key in data:  # Check if the key already exists in the dictionary
         value = request.json.get('value')  # Extracts the value from the JSON object
         y = re.search("[0-9]", value)  # Searches if there is at least one number in the value
@@ -76,7 +73,7 @@ def patch_item(key):
             return jsonify({key: value})  # Returns the updated item in JSON format
         else:
             return "Your value must contain at least one number.", 202  # Message to inform the user and exit code
-    elif x > 5:  # If there are more than 5 keys
+    elif x >= 5:  # If there are more than 5 keys
             return "404, Not Found. Remember that there are maximum 5 keys", 404  # Message to inform the user and exit code
     else:
         return "404, Not Found", 404  # Message to inform the user and exit code
@@ -85,7 +82,7 @@ def patch_item(key):
 def delete_item(key):
     if key in data:  # Check if the key exists in the dictionary
         del data[key]  # Delete the entry associated with the key from the dictionary
-        return 'Operation successful', 204  # Returns a 204 status code with no content
+        return "Operation successful" , 204  # Returns a 204 status code with no content
     else:
         return "404, Not Found", 404  # Message to inform the user and exit code
 
